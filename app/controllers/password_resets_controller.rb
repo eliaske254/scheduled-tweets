@@ -1,0 +1,15 @@
+class PasswordResetsController < ApplicationController
+  def new; end
+
+  def create
+    if @user.present?
+      # send email
+      PasswordMailer.with(user: @user).reset.deliver_now
+      end
+    redirect_to root_path, notice: 'If an account with that email was found, we have sent a link to reset your password'
+  end
+
+  def edit
+    @user = User.find_signed(params[:token], purpose: 'password_reset')
+  end
+end
